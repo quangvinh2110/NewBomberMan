@@ -8,7 +8,7 @@ public abstract class FragileObject extends Entity {
 
 
     public FragileObject(int x, int y, Image image) {
-        super(x, y);
+        super(x, y, image);
     }
 
     @Override

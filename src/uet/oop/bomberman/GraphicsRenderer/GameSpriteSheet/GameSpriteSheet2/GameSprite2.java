@@ -12,8 +12,6 @@ public class GameSprite2 {
 
     public static final int ORIGIN_TILE_SIZE = 16;
     public static final int RESIZE_TILE_SIZE = 20;
-    public static final int ORIGIN_BOMBER_HEIGHT = 27;
-    public static final int BOMBER_WIDTH = 17;
     public static final int SCALE_FACTOR = 2;
 
     private final int ORIGIN_WIDTH;
@@ -136,12 +134,11 @@ public class GameSprite2 {
 	| Location: Green Village
 	|--------------------------------------------------------------------------
 	 */
-    public static final GameSprite2 bomb1 = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 0, 0, ORIGIN_TILE_SIZE);
-    public static final GameSprite2 bomb2 = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 0, 0, ORIGIN_TILE_SIZE);
-    public static final GameSprite2 bomb3 = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 0, 0, ORIGIN_TILE_SIZE);
-    public static final GameSprite2 flame_center = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 0, 0, ORIGIN_TILE_SIZE);
-    public static final GameSprite2 flame_edge1 = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 0, 0, ORIGIN_TILE_SIZE);
-    public static final GameSprite2 flame_edge2 = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 0, 0, ORIGIN_TILE_SIZE);
+    public static final GameSprite2 bomb_small = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 185, ORIGIN_TILE_SIZE);
+    public static final GameSprite2 bomb_medium = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 526, 185, ORIGIN_TILE_SIZE);
+    public static final GameSprite2 flame_center = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 134, ORIGIN_TILE_SIZE);
+    public static final GameSprite2 flame_edge1 = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 151, ORIGIN_TILE_SIZE);
+    public static final GameSprite2 flame_tail = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 168, ORIGIN_TILE_SIZE);
 
 
     /*

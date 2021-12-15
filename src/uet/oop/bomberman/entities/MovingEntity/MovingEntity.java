@@ -43,6 +43,10 @@ public abstract class MovingEntity extends Entity {
         if (top_left1 == null || bottom_right1 == null || top_left2 == null || bottom_right2 == null) {
             return false;
         }
+        System.out.println("Top left 1: (" + top_left1.getX() + ", " + top_left1.getY() + ")");
+        System.out.println("Bottom right 1: (" + bottom_right1.getX() + ", " + bottom_right1.getY() + ")");
+        System.out.println("Top left 2: (" + top_left2.getX() + ", " + top_left2.getY() + ")");
+        System.out.println("Bottom right 2: (" + bottom_right2.getX() + ", " + bottom_right2.getY() + ")");
         if (top_left1.getX() >= bottom_right2.getX() || top_left2.getX() >= bottom_right1.getX()) {
             return false;
         }

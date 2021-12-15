@@ -6,9 +6,9 @@ import uet.oop.bomberman.entities.FixedEntity.Fragile.TreeRoot;
 import uet.oop.bomberman.entities.FixedEntity.Unbreakable.Grass;
 import uet.oop.bomberman.entities.FixedEntity.Unbreakable.Home;
 import uet.oop.bomberman.entities.FixedEntity.Unbreakable.Wall;
-import uet.oop.bomberman.entities.GridLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Map {
 
@@ -21,17 +21,17 @@ public class Map {
 
     public static final int[][] fixedMap = new int[][]{
             {9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9},
-            {9, 9, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9},
-            {9, 9, 0, 2, 4, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 9, 9},
-            {9, 9, 0, 1, 4, 1, 0, 1, 3, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 9, 9},
-            {9, 9, 0, 2, 3, 2, 0, 2, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 0, 9, 9},
-            {9, 9, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 3, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 9, 9},
-            {9, 9, 0, 2, 0, 2, 0, 2, 0, 2, 3, 2, 0, 2, 0, 2, 0, 2, 0, 2, 3, 2, 0, 2, 0, 2, 0, 2, 0, 9, 9},
-            {9, 9, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 1, 4, 1, 0, 1, 0, 1, 0, 1, 0, 9, 9},
-            {9, 9, 0, 2, 0, 2, 0, 2, 0, 2, 3, 2, 0, 2, 0, 2, 0, 2, 0, 2, 3, 2, 0, 2, 0, 2, 0, 2, 0, 9, 9},
-            {9, 9, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 9, 9},
+            {9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9},
+            {9, 9, 0, 2, 0, 2, 0, 2, 4, 2, 4, 2, 4, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 9, 9},
+            {9, 9, 0, 4, 0, 4, 0, 1, 4, 1, 4, 4, 3, 4, 0, 4, 4, 4, 0, 1, 0, 4, 0, 1, 4, 4, 0, 4, 0, 9, 9},
+            {9, 9, 0, 2, 0, 2, 4, 2, 4, 2, 4, 2, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 3, 2, 0, 2, 0, 9, 9},
+            {9, 9, 0, 4, 0, 1, 4, 4, 4, 4, 4, 4, 0, 1, 0, 4, 4, 1, 0, 4, 0, 4, 4, 4, 0, 1, 0, 4, 0, 9, 9},
+            {9, 9, 0, 2, 0, 2, 3, 2, 4, 2, 3, 2, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 9, 9},
+            {9, 9, 0, 1, 0, 1, 4, 4, 3, 4, 0, 4, 0, 4, 0, 1, 4, 4, 0, 4, 0, 1, 4, 1, 0, 1, 0, 1, 0, 9, 9},
+            {9, 9, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 3, 2, 0, 2, 0, 2, 0, 9, 9},
+            {9, 9, 0, 1, 0, 4, 0, 1, 0, 4, 0, 1, 0, 1, 0, 4, 3, 4, 0, 1, 0, 1, 0, 4, 0, 4, 0, 1, 0, 9, 9},
             {9, 9, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 9, 9},
-            {9, 9, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 9, 9},
+            {9, 9, 0, 4, 0, 1, 0, 1, 0, 1, 0, 1, 0, 4, 0, 4, 0, 1, 0, 1, 0, 4, 0, 4, 0, 4, 0, 4, 0, 9, 9},
             {9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9}
     };
 
@@ -44,7 +44,7 @@ public class Map {
 
     public Map() {
         this.map = new ArrayList<>();
-        encodedMap = fixedMap;
+        encodedMap = Arrays.copyOf(fixedMap, fixedMap.length);
         createMap(encodedMap);
     }
 
@@ -155,31 +155,13 @@ public class Map {
         return map;
     }
 
-    public boolean haveEntityAtGridLocation(GridLocation gridLocation) {
-        if(gridLocation == null) {
-            return false;
-        }
-        if (gridLocation.getY() > 12 || gridLocation.getY() < 0 || gridLocation.getX() > 30 || gridLocation.getX() < 0) {
-            return false;
-        }
-        switch (encodedMap[gridLocation.getY()][gridLocation.getX()]) {
-            case 0: case 1:
-                return false;
-            default:
-                return true;
-        }
-    }
 
     public boolean haveEntityAtGridLocation(int x, int y) {
-        if (y > 12 || y < 0 || x > 30 || x < 0) {
+        if (y > Map.HEIGHT - 1 || y < 0 || x > Map.WIDTH - 1 || x < 0) {
             return false;
         }
-        switch (encodedMap[y][x]) {
-            case 0: case 1: case 3:
-                return false;
-            default:
-                return true;
-        }
+        System.out.println("Position encodeMap[" + y + "][" + x +"]: " + this.encodedMap[y][x]);
+        return this.encodedMap[y][x] != 0 && this.encodedMap[y][x] != 1 && this.encodedMap[y][x] != 3;
     }
 
 

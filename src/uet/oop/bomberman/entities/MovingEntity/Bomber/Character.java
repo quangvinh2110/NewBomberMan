@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import uet.oop.bomberman.GraphicsRenderer.Animation.PingPong_Animation;
 import uet.oop.bomberman.GraphicsRenderer.GameSpriteSheet.GameSpriteSheet2.GameSprite2;
 import uet.oop.bomberman.Scene.Game.Map;
+import uet.oop.bomberman.entities.Bomb.Bomb;
 import uet.oop.bomberman.entities.Coordinate;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.FixedEntity.Unbreakable.Grass;
@@ -22,10 +23,12 @@ public class Character extends MovingEntity {
 
     private boolean isKilled;
 
-    private static final int offsetY = 22;
+    private static final int offsetY = 23;
 
     private final PingPong_Animation entityMovingAnimation;
     private static final double animateStep = 1.0/5;
+
+
 
 
     public Character(GameController input, int x, int y, Bomber chosenBomber, int id) {
@@ -60,7 +63,6 @@ public class Character extends MovingEntity {
         }
         if(input.isFireKey()) {
             createBomb();
-            decreaseBombCounter();
         }
     }
 
@@ -79,7 +81,7 @@ public class Character extends MovingEntity {
         }
         gc.drawImage(this.entityGraphics, this.coordinate.getX(), this.coordinate.getY());
         gc.strokeRect(this.coordinate.getX(), this.coordinate.getY() + offsetY, this.getWidth(), this.getHeight());
-    };
+    }
 
     @Override
     protected void move() {
@@ -95,21 +97,25 @@ public class Character extends MovingEntity {
 
         // update location
         this.update_Dx_Dy(speed);
-//        System.out.println("Current location: " + "(" + this.getX() + ", " + this.getY() + ")");
+        System.out.println("Current location: " + "(" + this.getX() + ", " + this.getY() + ")");
         if(canMove(this.getX() + dx, this.getY() + dy)) {
             updateY(dy);
             updateX(dx);
-//            System.out.println("Update location: " + "(" + this.getX() + ", " + this.getY() + ")");
+            System.out.println("Update location: " + "(" + this.getX() + ", " + this.getY() + ")");
+        } else {
+            System.out.println("Update location: " + "(" + this.getX() + ", " + this.getY() + ")");
         }
 //            System.out.println("Update location: " + "(" + this.getX() + ", " + this.getY() + ")");
 
-//        System.out.println();
+        System.out.println();
     }
 
     @Override
     protected boolean canMove(int nextX, int nextY) {
+        System.out.println("Width: " + this.getWidth() + ", Height: " + (this.getHeight() + offsetY));
         Coordinate bomber_top_left = new Coordinate(nextX, nextY + offsetY);
         Coordinate bomber_bottom_right = new Coordinate(nextX + this.getWidth(), nextY + offsetY + this.getHeight());
+
 
         int real_nextY = nextY + offsetY;
 
@@ -125,28 +131,36 @@ public class Character extends MovingEntity {
         int next_top_left_X_4 = nextX/Map.TILE_SIZE + 1;
         int next_top_left_Y_4 = real_nextY/Map.TILE_SIZE + 1;
 
-//        System.out.println("(" + next_top_left_X_1 + ", " + next_top_left_Y_1 + ")");
+        System.out.println("(" + next_top_left_X_1 + ", " + next_top_left_Y_1 + ")");
         if (map.haveEntityAtGridLocation(next_top_left_X_1, next_top_left_Y_1)) {
-//            System.out.println("top left: " + false);
+            System.out.println("top left: " + false);
             return false;
         }
         if (map.haveEntityAtGridLocation(next_top_left_X_2, next_top_left_Y_2)) {
-            //            System.out.println("top right: " + check);
-            return ! collide(new Coordinate(next_top_left_X_2*Map.TILE_SIZE, next_top_left_Y_2*Map.TILE_SIZE),
+            boolean check = ! collide(new Coordinate(next_top_left_X_2*Map.TILE_SIZE, next_top_left_Y_2*Map.TILE_SIZE),
                                       new Coordinate((next_top_left_X_2 + 1)*Map.TILE_SIZE, (next_top_left_Y_2 + 1)*Map.TILE_SIZE),
                                       bomber_top_left, bomber_bottom_right);
+            System.out.println("top right: " + check);
+            if (!check) {
+                return false;
+            }
         }
         if (map.haveEntityAtGridLocation(next_top_left_X_3, next_top_left_Y_3)) {
-            //            System.out.println("bottom left: " + check);
-            return ! collide(new Coordinate(next_top_left_X_3*Map.TILE_SIZE, next_top_left_Y_3*Map.TILE_SIZE),
+
+            boolean check = ! collide(new Coordinate(next_top_left_X_3*Map.TILE_SIZE, next_top_left_Y_3*Map.TILE_SIZE),
                                       new Coordinate((next_top_left_X_3 + 1)*Map.TILE_SIZE, (next_top_left_Y_3 + 1)*Map.TILE_SIZE),
                                       bomber_top_left, bomber_bottom_right);
+            System.out.println("bottom left: " + check);
+            if (!check) {
+                return false;
+            }
         }
         if (map.haveEntityAtGridLocation(next_top_left_X_4, next_top_left_Y_4)) {
-            //            System.out.println("bottom right: " + check);
-            return ! collide(new Coordinate(next_top_left_X_4*Map.TILE_SIZE, next_top_left_Y_4*Map.TILE_SIZE),
+            boolean check = ! collide(new Coordinate(next_top_left_X_4*Map.TILE_SIZE, next_top_left_Y_4*Map.TILE_SIZE),
                                        new Coordinate((next_top_left_X_4 + 1)*Map.TILE_SIZE, (next_top_left_Y_4 + 1)*Map.TILE_SIZE),
                                        bomber_top_left, bomber_bottom_right);
+            System.out.println("bottom right: " + check);
+            return check;
         }
         return true;
     }
@@ -167,7 +181,7 @@ public class Character extends MovingEntity {
 
     private void createBomb() {
         if (!isKilled && bombCounter < maxBombCounter) {
-
+            Bomb bomb = new Bomb(80, 80);
             bombCounter++;
         }
     }
@@ -182,7 +196,6 @@ public class Character extends MovingEntity {
 
 
     public int getHeight() {
-
         return (int) this.entityGraphics.getHeight() - offsetY;
     }
 

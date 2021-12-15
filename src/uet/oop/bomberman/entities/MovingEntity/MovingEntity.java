@@ -1,7 +1,6 @@
 package uet.oop.bomberman.entities.MovingEntity;
 
-import javafx.scene.canvas.GraphicsContext;
-import uet.oop.bomberman.Scene.Game.Map;
+import uet.oop.bomberman.Scene.Game.Map.MapManager;
 import uet.oop.bomberman.entities.Coordinate;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Direction;
 import uet.oop.bomberman.entities.Entity;
@@ -11,25 +10,20 @@ public abstract class MovingEntity extends Entity {
 
     protected int dx = 0;
     protected int dy = 0;
-    protected final int id;
     protected int speed = 2;
 
     protected Direction animateDirection = Direction.DOWN;
     protected Direction newAnimateDirection;
 
-    protected Map map;
+    protected MapManager mapManager;
 
-    public MovingEntity(int x, int y, int id) {
+    public MovingEntity(int x, int y, MapManager mapManager) {
         super(x, y);
-        this.id = id;
+        this.mapManager = mapManager;
     }
 
     public abstract void update();
 
-
-    public int getId() {
-        return id;
-    }
 
     public int getSpeed() {
         return speed;
@@ -53,7 +47,4 @@ public abstract class MovingEntity extends Entity {
         return bottom_right1.getY() > top_left2.getY() && bottom_right2.getY() > top_left1.getY();
     };
 
-    public void updateMap(Map map) {
-        this.map = map;
-    }
 }

@@ -1,9 +1,7 @@
-package uet.oop.bomberman.entities.FixedEntity.Unbreakable;
+package uet.oop.bomberman.entities.FixedEntity.Indestructible;
 
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import uet.oop.bomberman.entities.Entity;
 
 

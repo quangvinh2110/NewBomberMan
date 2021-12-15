@@ -12,7 +12,7 @@ public class PingPong_Animation {
     private int animateValue = 0;    // range [0.0, upperLimit]
     private double animateStep = 1;     // range (-upperLimit, +upperLimit) or, 0 if upperLimit = 0
     private final ArrayList<Integer> animateSequence;
-    private int upperLimit;
+    private final int upperLimit;
     private ArrayList<GameSprite2> sprites;
 
     public PingPong_Animation(ArrayList<GameSprite2> sprites, double realAnimationStep) {
@@ -62,6 +62,5 @@ public class PingPong_Animation {
         animateValue = animateSequence.get(animateSequence.size()/2);
         if (animateStep < 0) animateStep *= -1;
     }
-
 
 }

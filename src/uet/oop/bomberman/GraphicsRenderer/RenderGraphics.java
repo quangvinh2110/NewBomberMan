@@ -53,10 +53,6 @@ public class RenderGraphics {
         return output;
     }
 
-    public static void drawImage(GraphicsContext g, Image img, double x, double y) {
-        g.drawImage(img, x - 1.0, y - 1.0);
-    }
-
 
     public static double clampValueInRGB(double value) {
         if(value > 255) return 255;
@@ -64,16 +60,10 @@ public class RenderGraphics {
         return value;
     }
 
-    /**
-     * Method này đặt giá trị alpha (cho trước) cho Color.
-     */
     public static Color setAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), clampValueInRGB(alpha)/255);
     }
 
-    /**
-     * Method này đặt giá trị alpha của Image = một giá trị cho trước (trong màu rgba)
-     */
     public static Image setAlpha(Image input, double alpha) {
         alpha = clampValueInRGB(alpha);
         PixelReader pixelReader = input.getPixelReader();
@@ -87,9 +77,6 @@ public class RenderGraphics {
     }
 
 
-    /**
-     * Method này đặt giá trị alpha của background của Image = 0 (trong màu rgba)
-     */
     public static Image removeBackground(Image input) {
         PixelReader pixelReader = input.getPixelReader();
         WritableImage output = new WritableImage((int) input.getWidth(), (int) input.getHeight());

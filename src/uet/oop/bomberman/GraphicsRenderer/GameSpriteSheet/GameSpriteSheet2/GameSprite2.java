@@ -136,6 +136,7 @@ public class GameSprite2 {
 	 */
     public static final GameSprite2 bomb_small = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 185, ORIGIN_TILE_SIZE);
     public static final GameSprite2 bomb_medium = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 526, 185, ORIGIN_TILE_SIZE);
+    public static final GameSprite2 bomb_large = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 543, 185, ORIGIN_TILE_SIZE);
     public static final GameSprite2 flame_center = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 134, ORIGIN_TILE_SIZE);
     public static final GameSprite2 flame_edge1 = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 151, ORIGIN_TILE_SIZE);
     public static final GameSprite2 flame_tail = new GameSprite2(FilePath.GraphicsFilePath.GameSpriteSheet.Background, 509, 168, ORIGIN_TILE_SIZE);

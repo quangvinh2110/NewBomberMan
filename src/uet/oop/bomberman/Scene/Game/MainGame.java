@@ -5,17 +5,17 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import uet.oop.bomberman.Scene.Game.Map.MapManager;
 import uet.oop.bomberman.Setup.BaseWindow;
+import uet.oop.bomberman.entities.Bomb.Bomb;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Bomber;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Character;
 import uet.oop.bomberman.entities.MovingEntity.MovingEntity;
 import uet.oop.bomberman.entities.MovingEntity.Enemy.Enemy;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.FixedEntity.Fragile.FragileObject;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.GameController.*;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 public class MainGame {
 
@@ -28,23 +28,11 @@ public class MainGame {
     private AnimationTimer gameTimer;
 
 
-    private MovingEntity bomber;
-    private Hashtable<Integer, Enemy> enemiesList;
-    private Hashtable<Integer, FragileObject> fragileObjects;
-    private ArrayList<Entity> unbreakableObjects;
-
-    private Map map;
-    private final int fixedMap = 1;
-    private final int dynamicMap = 2;
-
-    private static int gameState;
-    private static final int readyGoState = 0;
-    private static final int runningState = 1;
-    private static final int hungryUpState = 2;
-    private static final int finishState = 3;
+    private Character bomber;
+    private ArrayList<Enemy> enemiesList;
 
 
-    private static int id = 1;
+    private MapManager mapManager;
 
 
     public MainGame(){
@@ -52,35 +40,14 @@ public class MainGame {
     }
 
     private void Initialize() {
-        gameState = readyGoState;
-
         canvas = new Canvas(BaseWindow.WIDTH, BaseWindow.HEIGHT);
         graphicsContext = canvas.getGraphicsContext2D();
         gameRoot = new Group();
         gameRoot.getChildren().add(canvas);
         gameScene = new Scene(gameRoot, BaseWindow.WIDTH, BaseWindow.HEIGHT);
 
-        enemiesList = new Hashtable<>();
-        fragileObjects = new Hashtable<>();
-        unbreakableObjects = new ArrayList<>();
-        map = new Map();
-
-    }
-
-
-    private void createReadyState() {
-
-    }
-
-    private void createRunningState() {
-
-    }
-
-    private void createHungryUpState() {
-
-    }
-
-    private void createFinishState() {
+        enemiesList = new ArrayList<>();
+        mapManager = new MapManager();
 
     }
 
@@ -96,9 +63,7 @@ public class MainGame {
     private void createBomber(Bomber chosenBomber) {
         GameController gameController = new GameController(gameScene);
         gameController.addListeners();
-        bomber = new Character(gameController, 80, 80, chosenBomber, id);
-        bomber.updateMap(map);
-        id++;
+        bomber = new Character(gameController, 80, 80, chosenBomber, mapManager);
     }
 
 
@@ -109,13 +74,11 @@ public class MainGame {
 
 
     private void run() {
-        gameState = runningState;
         gameTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 render();
                 update();
-                updateMap();
             }
         };
 
@@ -127,27 +90,35 @@ public class MainGame {
 
     private void update() {
         bomber.update();
-        enemiesList.forEach((k, o)-> o.update());
-        fragileObjects.forEach((k, o) -> o.update());
-        map.getMap().forEach(Entity::update);
-    }
-
-    private void updateMap() {
-        bomber.updateMap(map);
-        enemiesList.forEach((k, o)-> o.updateMap(map));
+        if (enemiesList.size() > 0) {
+            enemiesList.forEach(Enemy::update);
+        }
+        if (mapManager.getFixedEntityInMap().size() > 0) {
+            mapManager.getFixedEntityInMap().forEach(Entity::update);
+        }
+        if (mapManager.getDynamicEntityInMap().size() > 0) {
+            mapManager.getDynamicEntityInMap().forEach(Entity::update);
+        }
+        if (mapManager.getBombs().size() > 0) {
+            mapManager.getBombs().forEach(Bomb::update);
+        }
     }
 
     private void render() {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        unbreakableObjects.forEach(o -> o.render(graphicsContext));
-        fragileObjects.forEach((k, o) -> o.render(graphicsContext));
-        map.getMap().forEach(e -> e.render(graphicsContext));
-        enemiesList.forEach((k, o) -> o.render(graphicsContext));
+        if (mapManager.getFixedEntityInMap().size() > 0) {
+            mapManager.getFixedEntityInMap().forEach(e -> e.render(graphicsContext));
+        }
+        if (mapManager.getDynamicEntityInMap().size() > 0) {
+            mapManager.getDynamicEntityInMap().forEach(o -> o.render(graphicsContext));
+        }
+        if (mapManager.getBombs().size() > 0) {
+            mapManager.getBombs().forEach(o -> o.render(graphicsContext));
+        }
+        if (enemiesList.size() > 0) {
+            enemiesList.forEach( o -> o.render(graphicsContext));
+        }
         bomber.render(graphicsContext);
-    }
-
-    public Group getGameRoot() {
-        return gameRoot;
     }
 
     public Scene getGameScene() {

@@ -2,12 +2,10 @@ package uet.oop.bomberman.entities.MovingEntity.Bomber;
 
 import javafx.scene.canvas.GraphicsContext;
 import uet.oop.bomberman.GraphicsRenderer.Animation.PingPong_Animation;
-import uet.oop.bomberman.GraphicsRenderer.GameSpriteSheet.GameSpriteSheet2.GameSprite2;
-import uet.oop.bomberman.Scene.Game.Map;
+import uet.oop.bomberman.Scene.Game.Map.Map;
+import uet.oop.bomberman.Scene.Game.Map.MapManager;
 import uet.oop.bomberman.entities.Bomb.Bomb;
 import uet.oop.bomberman.entities.Coordinate;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.FixedEntity.Unbreakable.Grass;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.GameController.GameController;
 import uet.oop.bomberman.entities.MovingEntity.MovingEntity;
 
@@ -19,9 +17,11 @@ public class Character extends MovingEntity {
     private boolean[] pressedDirection;
 
     private int bombCounter = 0;
-    private int maxBombCounter = 1;
+    private int maxBombCounter = 7;
+    private int explosionRange = 1;
 
     private boolean isKilled;
+    private boolean death;
 
     private static final int offsetY = 23;
 
@@ -31,8 +31,8 @@ public class Character extends MovingEntity {
 
 
 
-    public Character(GameController input, int x, int y, Bomber chosenBomber, int id) {
-        super(x, y, id);
+    public Character(GameController input, int x, int y, Bomber chosenBomber, MapManager mapManager) {
+        super(x, y, mapManager);
 
         bomber = chosenBomber;
         this.input = input;
@@ -41,7 +41,7 @@ public class Character extends MovingEntity {
         entityMovingAnimation = new PingPong_Animation(bomber.getMovingSprites(animateDirection), animateStep);
 
         isKilled = false;
-
+        death = false;
     }
 
     private void processInput() {
@@ -63,6 +63,7 @@ public class Character extends MovingEntity {
         }
         if(input.isFireKey()) {
             createBomb();
+            System.out.println("SPACE!");
         }
     }
 
@@ -72,7 +73,6 @@ public class Character extends MovingEntity {
         processInput();
         // update animation and location
         move();
-
     }
 
     public void render(GraphicsContext gc) {
@@ -119,45 +119,45 @@ public class Character extends MovingEntity {
 
         int real_nextY = nextY + offsetY;
 
-        int next_top_left_X_1 = nextX/Map.TILE_SIZE;
-        int next_top_left_Y_1 = real_nextY/Map.TILE_SIZE;
+        int next_top_left_X_1 = nextX/ Map.TILE_SIZE;
+        int next_top_left_Y_1 = real_nextY/ Map.TILE_SIZE;
 
-        int next_top_left_X_2 = nextX/Map.TILE_SIZE + 1;
-        int next_top_left_Y_2 = real_nextY/Map.TILE_SIZE;
+        int next_top_left_X_2 = nextX/ Map.TILE_SIZE + 1;
+        int next_top_left_Y_2 = real_nextY/ Map.TILE_SIZE;
 
-        int next_top_left_X_3 = nextX/Map.TILE_SIZE;
-        int next_top_left_Y_3 = real_nextY/Map.TILE_SIZE + 1;
+        int next_top_left_X_3 = nextX/ Map.TILE_SIZE;
+        int next_top_left_Y_3 = real_nextY/ Map.TILE_SIZE + 1;
 
-        int next_top_left_X_4 = nextX/Map.TILE_SIZE + 1;
-        int next_top_left_Y_4 = real_nextY/Map.TILE_SIZE + 1;
+        int next_top_left_X_4 = nextX/ Map.TILE_SIZE + 1;
+        int next_top_left_Y_4 = real_nextY/ Map.TILE_SIZE + 1;
 
         System.out.println("(" + next_top_left_X_1 + ", " + next_top_left_Y_1 + ")");
-        if (map.haveEntityAtGridLocation(next_top_left_X_1, next_top_left_Y_1)) {
+        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_1, next_top_left_Y_1)) {
             System.out.println("top left: " + false);
             return false;
         }
-        if (map.haveEntityAtGridLocation(next_top_left_X_2, next_top_left_Y_2)) {
-            boolean check = ! collide(new Coordinate(next_top_left_X_2*Map.TILE_SIZE, next_top_left_Y_2*Map.TILE_SIZE),
-                                      new Coordinate((next_top_left_X_2 + 1)*Map.TILE_SIZE, (next_top_left_Y_2 + 1)*Map.TILE_SIZE),
+        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_2, next_top_left_Y_2)) {
+            boolean check = ! collide(new Coordinate(next_top_left_X_2* Map.TILE_SIZE, next_top_left_Y_2* Map.TILE_SIZE),
+                                      new Coordinate((next_top_left_X_2 + 1)* Map.TILE_SIZE, (next_top_left_Y_2 + 1)* Map.TILE_SIZE),
                                       bomber_top_left, bomber_bottom_right);
             System.out.println("top right: " + check);
             if (!check) {
                 return false;
             }
         }
-        if (map.haveEntityAtGridLocation(next_top_left_X_3, next_top_left_Y_3)) {
+        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_3, next_top_left_Y_3)) {
 
-            boolean check = ! collide(new Coordinate(next_top_left_X_3*Map.TILE_SIZE, next_top_left_Y_3*Map.TILE_SIZE),
-                                      new Coordinate((next_top_left_X_3 + 1)*Map.TILE_SIZE, (next_top_left_Y_3 + 1)*Map.TILE_SIZE),
+            boolean check = ! collide(new Coordinate(next_top_left_X_3* Map.TILE_SIZE, next_top_left_Y_3* Map.TILE_SIZE),
+                                      new Coordinate((next_top_left_X_3 + 1)* Map.TILE_SIZE, (next_top_left_Y_3 + 1)* Map.TILE_SIZE),
                                       bomber_top_left, bomber_bottom_right);
             System.out.println("bottom left: " + check);
             if (!check) {
                 return false;
             }
         }
-        if (map.haveEntityAtGridLocation(next_top_left_X_4, next_top_left_Y_4)) {
-            boolean check = ! collide(new Coordinate(next_top_left_X_4*Map.TILE_SIZE, next_top_left_Y_4*Map.TILE_SIZE),
-                                       new Coordinate((next_top_left_X_4 + 1)*Map.TILE_SIZE, (next_top_left_Y_4 + 1)*Map.TILE_SIZE),
+        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_4, next_top_left_Y_4)) {
+            boolean check = ! collide(new Coordinate(next_top_left_X_4* Map.TILE_SIZE, next_top_left_Y_4* Map.TILE_SIZE),
+                                       new Coordinate((next_top_left_X_4 + 1)* Map.TILE_SIZE, (next_top_left_Y_4 + 1)* Map.TILE_SIZE),
                                        bomber_top_left, bomber_bottom_right);
             System.out.println("bottom right: " + check);
             return check;
@@ -165,35 +165,78 @@ public class Character extends MovingEntity {
         return true;
     }
 
-
-//    @Override
-//    protected boolean collide(Coordinate top_left1, Coordinate bottom_right1, Coordinate top_left2, Coordinate bottom_right2) {
-////        System.out.println("Top left 1: (" + top_left1.getX() + ", " + top_left1.getY() + ")");
-////        System.out.println("Bottom right 1: (" + bottom_right1.getX() + ", " + bottom_right1.getY() + ")");
-////        System.out.println("Top left 2: (" + top_left2.getX() + ", " + top_left2.getY() + ")");
-////        System.out.println("Bottom right 2: (" + bottom_right2.getX() + ", " + bottom_right2.getY() + ")");
-//        if (top_left1.getX() >= bottom_right2.getX() || top_left2.getX() >= bottom_right1.getX()) {
-//            return false;
-//        }
-//        return bottom_right1.getY() > top_left2.getY() && bottom_right2.getY() > top_left1.getY();
-//    }
-
-
     private void createBomb() {
-        if (!isKilled && bombCounter < maxBombCounter) {
-            Bomb bomb = new Bomb(80, 80);
+        if (!isKilled && (bombCounter < maxBombCounter)) {
+            int gridX = (int) (this.getX()*1.0/Map.TILE_SIZE);
+            int gridY = (int) ((this.getY() + offsetY)*1.0/Map.TILE_SIZE);
+
+            Coordinate top_left = new Coordinate(this.getX(), this.getY() + offsetY);
+            Coordinate bottom_right = new Coordinate(this.getX() + this.getWidth(), this.getY() + offsetY + this.getHeight());
+
+            if (bottom_right.getX() <= (gridX + 1)*Map.TILE_SIZE
+                    && bottom_right.getY() <= (gridY + 1)*Map.TILE_SIZE) {
+                Bomb bomb = new Bomb(gridX*Map.TILE_SIZE, gridY*Map.TILE_SIZE, this);
+                mapManager.receiveBomb(bomb);
+            }
+            else if (bottom_right.getX() > (gridX + 1)*Map.TILE_SIZE
+                    && bottom_right.getY() <= (gridY + 1)*Map.TILE_SIZE) {
+                Bomb bomb;
+                if (bottom_right.getX() - (gridX + 1)*Map.TILE_SIZE > (gridX + 1)*Map.TILE_SIZE - top_left.getX()
+                        && mapManager.freeToPutBomb(gridX + 1, gridY)) {
+                    bomb = new Bomb((gridX + 1) * Map.TILE_SIZE, gridY * Map.TILE_SIZE, this);
+                } else {
+                    bomb = new Bomb(gridX * Map.TILE_SIZE, gridY * Map.TILE_SIZE, this);
+                }
+                mapManager.receiveBomb(bomb);
+            }
+            else if (bottom_right.getX() <= (gridX + 1)*Map.TILE_SIZE
+                    && bottom_right.getY() > (gridY + 1)*Map.TILE_SIZE) {
+                Bomb bomb;
+                if (bottom_right.getY() - (gridY + 1)*Map.TILE_SIZE > (gridY + 1)*Map.TILE_SIZE - top_left.getY()
+                        && mapManager.freeToPutBomb(gridX, gridY + 1)) {
+                    bomb = new Bomb(gridX * Map.TILE_SIZE, (gridY + 1) * Map.TILE_SIZE, this);
+                } else {
+                    bomb = new Bomb(gridX * Map.TILE_SIZE, gridY * Map.TILE_SIZE, this);
+                }
+                mapManager.receiveBomb(bomb);
+            }
+            else {
+                Bomb bomb;
+                int dx;
+                int dy;
+                if (bottom_right.getX() - (gridX + 1)*Map.TILE_SIZE > (gridX + 1)*Map.TILE_SIZE - top_left.getX()) {
+                    dx = 1;
+                } else {
+                    dx = 0;
+                }
+                if (bottom_right.getY() - (gridY + 1)*Map.TILE_SIZE > (gridY + 1)*Map.TILE_SIZE - top_left.getY()) {
+                    dy = 1;
+                } else {
+                    dy = 0;
+                }
+                if (mapManager.freeToPutBomb(gridX + dx, gridY + dy)) {
+                    bomb = new Bomb(gridX + dx, gridY + dy, this);
+                } else if (mapManager.freeToPutBomb(gridX + 1 - dx, gridY + dy)) {
+                    bomb = new Bomb(gridX + 1 -dx, gridY + dy, this);
+                } else if (mapManager.freeToPutBomb(gridX + dx, gridY + 1 - dy)) {
+                    bomb = new Bomb(gridX + dx, gridY + 1 - dy, this);
+                } else {
+                    bomb = new Bomb(gridX + 1 - dx, gridY + 1 - dy, this);
+                }
+                mapManager.receiveBomb(bomb);
+            }
             bombCounter++;
+            System.out.println("Bomb counter: " + bombCounter);
         }
     }
 
-    private void decreaseBombCounter() {
-        bombCounter--;
+    public void removeBomb(Bomb bomb) {
+        this.mapManager.getBombs().remove(bomb);
     }
 
     public boolean isKilled() {
         return isKilled;
     }
-
 
     public int getHeight() {
         return (int) this.entityGraphics.getHeight() - offsetY;
@@ -226,6 +269,5 @@ public class Character extends MovingEntity {
             dx = 0;
         }
     }
-
 
 }

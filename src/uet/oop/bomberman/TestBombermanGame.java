@@ -10,8 +10,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.GraphicsRenderer.GameSpriteSheet.GameSpriteSheet1.GameSprite1;
 import uet.oop.bomberman.GraphicsRenderer.GameSpriteSheet.GameSpriteSheet2.GameSprite2;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.FixedEntity.Unbreakable.Grass;
-import uet.oop.bomberman.entities.FixedEntity.Unbreakable.Wall;
+import uet.oop.bomberman.entities.FixedEntity.Indestructible.Grass;
 
 import java.util.ArrayList;
 import java.util.List;

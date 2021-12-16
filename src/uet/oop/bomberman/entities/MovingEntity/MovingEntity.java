@@ -1,7 +1,7 @@
 package uet.oop.bomberman.entities.MovingEntity;
 
 import uet.oop.bomberman.Scene.Game.Map.MapManager;
-import uet.oop.bomberman.entities.Coordinate;
+import uet.oop.bomberman.entities.BoundaryBox;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Direction;
 import uet.oop.bomberman.entities.Entity;
 
@@ -33,22 +33,20 @@ public abstract class MovingEntity extends Entity {
 
     protected abstract boolean canMove(int nextX, int nextY);
 
-    protected boolean collide(Coordinate top_left1, Coordinate bottom_right1, Coordinate top_left2, Coordinate bottom_right2) {
-        if (top_left1 == null || bottom_right1 == null || top_left2 == null || bottom_right2 == null) {
-            return false;
+    protected boolean collide(BoundaryBox boundaryBox1, BoundaryBox boundaryBox2) {
+        if (boundaryBox1 == null || boundaryBox2 == null) {
+            return true;
         }
-        System.out.println("Top left 1: (" + top_left1.getX() + ", " + top_left1.getY() + ")");
-        System.out.println("Bottom right 1: (" + bottom_right1.getX() + ", " + bottom_right1.getY() + ")");
-        System.out.println("Top left 2: (" + top_left2.getX() + ", " + top_left2.getY() + ")");
-        System.out.println("Bottom right 2: (" + bottom_right2.getX() + ", " + bottom_right2.getY() + ")");
-        if (top_left1.getX() >= bottom_right2.getX() || top_left2.getX() >= bottom_right1.getX()) {
-            return false;
+        System.out.println("Top left 1: (" + boundaryBox1.getTop_left().getX() + ", " + boundaryBox1.getTop_left().getY() + ")");
+        System.out.println("Bottom right 1: (" + boundaryBox1.getBottom_right().getX() + ", " +boundaryBox1.getBottom_right().getY() + ")");
+        System.out.println("Top left 2: (" + boundaryBox2.getTop_left().getX() + ", " + boundaryBox2.getTop_left().getY() + ")");
+        System.out.println("Bottom right 2: (" + boundaryBox2.getBottom_right().getX() + ", " + boundaryBox2.getBottom_right().getY() + ")");
+        if (boundaryBox1.getTop_left().getX() >= boundaryBox2.getBottom_right().getX()
+                || boundaryBox2.getTop_left().getX() >= boundaryBox1.getBottom_right().getX()) {
+            return true;
         }
-        return bottom_right1.getY() > top_left2.getY() && bottom_right2.getY() > top_left1.getY();
+        return boundaryBox1.getBottom_right().getY() <= boundaryBox2.getTop_left().getY()
+                || boundaryBox2.getBottom_right().getY() <= boundaryBox1.getTop_left().getY();
     };
-
-    public MapManager getMapManager() {
-        return this.mapManager;
-    }
 
 }

@@ -37,7 +37,6 @@ public class Bomb extends Entity {
         entityGraphics = entityAnimation.animate();
         if(countToExplode < 0) {
             exploding = true;
-            removeBomb();
         }
         if(exploding) {
             explodingTime--;
@@ -46,15 +45,4 @@ public class Bomb extends Entity {
         }
     }
 
-    private void removeBomb() {
-        for (Entity entity : this.bombOwner.getMapManager().getDynamicEntityInMap()) {
-            if (entity instanceof Bomb) {
-                Bomb bomb = (Bomb) entity;
-                if (bomb.exploding) {
-                    this.bombOwner.getMapManager().getDynamicEntityInMap().remove(bomb);
-                    return;
-                }
-            }
-        }
-    }
 }

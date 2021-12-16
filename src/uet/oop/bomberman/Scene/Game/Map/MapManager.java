@@ -19,18 +19,15 @@ public class MapManager {
 
     private final ArrayList<Entity> fixedEntityInMap;
     private final ArrayList<Entity> dynamicEntityInMap;
-    private final ArrayList<Bomb> bombs;
-    private int[][] encodedMap;
+    private final int[][] encodedMap;
 
 
     public MapManager() {
         this.fixedEntityInMap = new ArrayList<>();
         this.dynamicEntityInMap = new ArrayList<>();
-        this.bombs = new ArrayList<>();
         encodedMap = Arrays.copyOf(fixedMap, fixedMap.length);
         createMap(encodedMap);
     }
-
 
     private void createMap(int[][] map) {
         createBoundaryWall();
@@ -126,10 +123,6 @@ public class MapManager {
         return dynamicEntityInMap;
     }
 
-    public ArrayList<Bomb> getBombs() {
-        return bombs;
-    }
-
     public boolean haveFixedEntityAtGridLocation(int gridX, int gridY) {
         if (gridY > Map.HEIGHT - 1 || gridY < 0 || gridX > Map.WIDTH - 1 || gridX < 0) {
             return false;
@@ -167,7 +160,6 @@ public class MapManager {
 
     }
 
-
     private void updateAfterRemoveAtGridLocation(int gridX, int gridY) {
         if(encodedMap[gridY - 1][gridX] == GridObject.Home.ordinal()) {
             encodedMap[gridY][gridX] = GridObject.GrassBelowHome.ordinal();
@@ -184,20 +176,36 @@ public class MapManager {
         }
     }
 
-    public void putBombAtGridLocation(Bomb bomb, int gridX, int gridY) {
+    public boolean putBombAtGridLocation(Bomb bomb, int gridX, int gridY) {
         if (freeToPutBomb(gridX, gridY)) {
             encodedMap[gridY][gridX] = GridObject.Bomb.ordinal();
-            bombs.add(bomb);
+            dynamicEntityInMap.add(bomb);
+            return true;
         }
         System.out.println(freeToPutBomb(gridX, gridY));
         System.out.println(encodedMap[gridY][gridX]);
+        return false;
     }
 
-    public void receiveBomb(Bomb bomb) {
+    public boolean receiveBomb(Bomb bomb) {
+        if (bomb == null) {
+            return false;
+        }
         System.out.println("(GridX, GridY): (" + bomb.getX()/Map.TILE_SIZE + ", " + bomb.getY()/Map.TILE_SIZE + ")");
-        putBombAtGridLocation(bomb, bomb.getX()/Map.TILE_SIZE, bomb.getY()/Map.TILE_SIZE);
+        return putBombAtGridLocation(bomb, bomb.getX()/Map.TILE_SIZE, bomb.getY()/Map.TILE_SIZE);
     }
 
-
+    public void updateDynamicEntityList() {
+        for (Entity entity : this.dynamicEntityInMap) {
+            if (entity instanceof Bomb) {
+                Bomb bomb = (Bomb) entity;
+                if (bomb.exploding) {
+                    this.dynamicEntityInMap.remove(bomb);
+                    updateAfterRemoveAtGridLocation(bomb.getX()/Map.TILE_SIZE, bomb.getY()/Map.TILE_SIZE);
+                    break;
+                }
+            }
+        }
+    }
 
 }

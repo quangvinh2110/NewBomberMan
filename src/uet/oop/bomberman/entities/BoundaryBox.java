@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities.MovingEntity;
+package uet.oop.bomberman.entities;
 
 import uet.oop.bomberman.entities.Coordinate;
 

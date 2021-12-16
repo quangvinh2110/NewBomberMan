@@ -5,6 +5,7 @@ import uet.oop.bomberman.GraphicsRenderer.Animation.PingPong_Animation;
 import uet.oop.bomberman.Scene.Game.Map.Map;
 import uet.oop.bomberman.Scene.Game.Map.MapManager;
 import uet.oop.bomberman.entities.Bomb.Bomb;
+import uet.oop.bomberman.entities.BoundaryBox;
 import uet.oop.bomberman.entities.Coordinate;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.GameController.GameController;
 import uet.oop.bomberman.entities.MovingEntity.MovingEntity;
@@ -16,8 +17,10 @@ public class Character extends MovingEntity {
 
     private boolean[] pressedDirection;
 
-    private int bombCounter = 0;
-    private int maxBombCounter = 7;
+    private final int createBombTime = 7;
+    private int createBombTimeElapsed;
+    private int bombCounter;
+    private int maxBombCounter = 4;
     private int explosionRange = 1;
 
     private boolean isKilled;
@@ -40,8 +43,14 @@ public class Character extends MovingEntity {
         entityGraphics = bomber.getMovingSprites(animateDirection).get(1).getImage();
         entityMovingAnimation = new PingPong_Animation(bomber.getMovingSprites(animateDirection), animateStep);
 
+        createBombTimeElapsed = 0;
+        bombCounter = 0;
+
         isKilled = false;
         death = false;
+
+        this.boundaryBox = new BoundaryBox(new Coordinate(this.getX(), this.getY() + offsetY), this.getImageWidth(),
+                this.getImageHeight() - offsetY);
     }
 
     private void processInput() {
@@ -62,8 +71,15 @@ public class Character extends MovingEntity {
             pressedDirection[Direction.RIGHT.ordinal()] = true;
         }
         if(input.isFireKey()) {
-            createBomb();
-            System.out.println("SPACE!");
+            System.out.println("CreateBombTimeElapsed: " + createBombTimeElapsed);
+            if (createBombTimeElapsed == 0) {
+                createBomb();
+                createBombTimeElapsed++;
+            } else if (createBombTimeElapsed == createBombTime) {
+                createBombTimeElapsed = 0;
+            } else {
+                createBombTimeElapsed++;
+            }
         }
     }
 
@@ -80,7 +96,8 @@ public class Character extends MovingEntity {
             return;
         }
         gc.drawImage(this.entityGraphics, this.coordinate.getX(), this.coordinate.getY());
-        gc.strokeRect(this.coordinate.getX(), this.coordinate.getY() + offsetY, this.getWidth(), this.getHeight());
+        gc.strokeRect(this.boundaryBox.getTop_left().getX(), this.boundaryBox.getTop_left().getY(),
+                this.boundaryBox.getBoundaryBoxWidth(), this.boundaryBox.getBoundaryBoxHeight());
     }
 
     @Override
@@ -99,66 +116,60 @@ public class Character extends MovingEntity {
         this.update_Dx_Dy(speed);
         System.out.println("Current location: " + "(" + this.getX() + ", " + this.getY() + ")");
         if(canMove(this.getX() + dx, this.getY() + dy)) {
-            updateY(dy);
-            updateX(dx);
+            this.updateCoordinate(dx, dy);
             System.out.println("Update location: " + "(" + this.getX() + ", " + this.getY() + ")");
         } else {
             System.out.println("Update location: " + "(" + this.getX() + ", " + this.getY() + ")");
         }
-//            System.out.println("Update location: " + "(" + this.getX() + ", " + this.getY() + ")");
 
         System.out.println();
     }
 
     @Override
     protected boolean canMove(int nextX, int nextY) {
-        System.out.println("Width: " + this.getWidth() + ", Height: " + (this.getHeight() + offsetY));
-        Coordinate bomber_top_left = new Coordinate(nextX, nextY + offsetY);
-        Coordinate bomber_bottom_right = new Coordinate(nextX + this.getWidth(), nextY + offsetY + this.getHeight());
+        System.out.println("Width: " + this.getImageWidth() + ", Height: " + (this.getImageHeight() + offsetY));
+        BoundaryBox newBoundaryBox = new BoundaryBox(new Coordinate(nextX, nextY + offsetY),
+                this.boundaryBox.getBoundaryBoxWidth(), this.boundaryBox.getBoundaryBoxHeight());
 
 
         int real_nextY = nextY + offsetY;
 
-        int next_top_left_X_1 = nextX/ Map.TILE_SIZE;
-        int next_top_left_Y_1 = real_nextY/ Map.TILE_SIZE;
+        int top_left_X_1 = nextX/ Map.TILE_SIZE;
+        int top_left_Y_1 = real_nextY/ Map.TILE_SIZE;
 
-        int next_top_left_X_2 = nextX/ Map.TILE_SIZE + 1;
-        int next_top_left_Y_2 = real_nextY/ Map.TILE_SIZE;
+        int top_left_X_2 = nextX/ Map.TILE_SIZE + 1;
+        int top_left_Y_2 = real_nextY/ Map.TILE_SIZE;
 
-        int next_top_left_X_3 = nextX/ Map.TILE_SIZE;
-        int next_top_left_Y_3 = real_nextY/ Map.TILE_SIZE + 1;
+        int top_left_X_3 = nextX/ Map.TILE_SIZE;
+        int top_left_Y_3 = real_nextY/ Map.TILE_SIZE + 1;
 
-        int next_top_left_X_4 = nextX/ Map.TILE_SIZE + 1;
-        int next_top_left_Y_4 = real_nextY/ Map.TILE_SIZE + 1;
+        int top_left_X_4 = nextX/ Map.TILE_SIZE + 1;
+        int top_left_Y_4 = real_nextY/ Map.TILE_SIZE + 1;
 
-        System.out.println("(" + next_top_left_X_1 + ", " + next_top_left_Y_1 + ")");
-        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_1, next_top_left_Y_1)) {
+        System.out.println("(" + top_left_X_1 + ", " + top_left_Y_1 + ")");
+        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_1, top_left_Y_1)) {
             System.out.println("top left: " + false);
             return false;
         }
-        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_2, next_top_left_Y_2)) {
-            boolean check = ! collide(new Coordinate(next_top_left_X_2* Map.TILE_SIZE, next_top_left_Y_2* Map.TILE_SIZE),
-                                      new Coordinate((next_top_left_X_2 + 1)* Map.TILE_SIZE, (next_top_left_Y_2 + 1)* Map.TILE_SIZE),
-                                      bomber_top_left, bomber_bottom_right);
+        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_2, top_left_Y_2)) {
+            Coordinate top_left = new Coordinate(top_left_X_2*Map.TILE_SIZE, top_left_Y_2*Map.TILE_SIZE);
+            boolean check = collide(newBoundaryBox, new BoundaryBox(top_left, Map.TILE_SIZE, Map.TILE_SIZE));
             System.out.println("top right: " + check);
             if (!check) {
                 return false;
             }
         }
-        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_3, next_top_left_Y_3)) {
-
-            boolean check = ! collide(new Coordinate(next_top_left_X_3* Map.TILE_SIZE, next_top_left_Y_3* Map.TILE_SIZE),
-                                      new Coordinate((next_top_left_X_3 + 1)* Map.TILE_SIZE, (next_top_left_Y_3 + 1)* Map.TILE_SIZE),
-                                      bomber_top_left, bomber_bottom_right);
+        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_3, top_left_Y_3)) {
+            Coordinate top_left = new Coordinate(top_left_X_3*Map.TILE_SIZE, top_left_Y_3*Map.TILE_SIZE);
+            boolean check = collide(newBoundaryBox, new BoundaryBox(top_left, Map.TILE_SIZE, Map.TILE_SIZE));
             System.out.println("bottom left: " + check);
             if (!check) {
                 return false;
             }
         }
-        if (mapManager.haveFixedEntityAtGridLocation(next_top_left_X_4, next_top_left_Y_4)) {
-            boolean check = ! collide(new Coordinate(next_top_left_X_4* Map.TILE_SIZE, next_top_left_Y_4* Map.TILE_SIZE),
-                                       new Coordinate((next_top_left_X_4 + 1)* Map.TILE_SIZE, (next_top_left_Y_4 + 1)* Map.TILE_SIZE),
-                                       bomber_top_left, bomber_bottom_right);
+        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_4, top_left_Y_4)) {
+            Coordinate top_left = new Coordinate(top_left_X_4*Map.TILE_SIZE, top_left_Y_4*Map.TILE_SIZE);
+            boolean check = collide(newBoundaryBox, new BoundaryBox(top_left, Map.TILE_SIZE, Map.TILE_SIZE));
             System.out.println("bottom right: " + check);
             return check;
         }
@@ -167,66 +178,13 @@ public class Character extends MovingEntity {
 
     private void createBomb() {
         if (!isKilled && (bombCounter < maxBombCounter)) {
-            int id = this.bombCounter;
             int gridX = (int) (this.getX()*1.0/Map.TILE_SIZE);
             int gridY = (int) ((this.getY() + offsetY)*1.0/Map.TILE_SIZE);
-
-            Coordinate top_left = new Coordinate(this.getX(), this.getY() + offsetY);
-            Coordinate bottom_right = new Coordinate(this.getX() + this.getWidth(), this.getY() + offsetY + this.getHeight());
-
-            if (bottom_right.getX() <= (gridX + 1)*Map.TILE_SIZE
-                    && bottom_right.getY() <= (gridY + 1)*Map.TILE_SIZE) {
-                Bomb bomb = new Bomb(gridX*Map.TILE_SIZE, gridY*Map.TILE_SIZE, this);
-                mapManager.receiveBomb(bomb);
+            Bomb bomb = new Bomb(gridX*Map.TILE_SIZE, gridY*Map.TILE_SIZE, this);
+            boolean receiveSuccess = mapManager.receiveBomb(bomb);
+            if (receiveSuccess) {
+                bombCounter++;
             }
-            else if (bottom_right.getX() > (gridX + 1)*Map.TILE_SIZE
-                    && bottom_right.getY() <= (gridY + 1)*Map.TILE_SIZE) {
-                Bomb bomb;
-                if (bottom_right.getX() - (gridX + 1)*Map.TILE_SIZE > (gridX + 1)*Map.TILE_SIZE - top_left.getX()
-                        && mapManager.freeToPutBomb(gridX + 1, gridY)) {
-                    bomb = new Bomb((gridX + 1) * Map.TILE_SIZE, gridY * Map.TILE_SIZE, this);
-                } else {
-                    bomb = new Bomb(gridX * Map.TILE_SIZE, gridY * Map.TILE_SIZE, this);
-                }
-                mapManager.receiveBomb(bomb);
-            }
-            else if (bottom_right.getX() <= (gridX + 1)*Map.TILE_SIZE
-                    && bottom_right.getY() > (gridY + 1)*Map.TILE_SIZE) {
-                Bomb bomb;
-                if (bottom_right.getY() - (gridY + 1)*Map.TILE_SIZE > (gridY + 1)*Map.TILE_SIZE - top_left.getY()
-                        && mapManager.freeToPutBomb(gridX, gridY + 1)) {
-                    bomb = new Bomb(gridX * Map.TILE_SIZE, (gridY + 1) * Map.TILE_SIZE, this);
-                } else {
-                    bomb = new Bomb(gridX * Map.TILE_SIZE, gridY * Map.TILE_SIZE, this);
-                }
-                mapManager.receiveBomb(bomb);
-            }
-            else {
-                Bomb bomb;
-                int dx;
-                int dy;
-                if (bottom_right.getX() - (gridX + 1)*Map.TILE_SIZE > (gridX + 1)*Map.TILE_SIZE - top_left.getX()) {
-                    dx = 1;
-                } else {
-                    dx = 0;
-                }
-                if (bottom_right.getY() - (gridY + 1)*Map.TILE_SIZE > (gridY + 1)*Map.TILE_SIZE - top_left.getY()) {
-                    dy = 1;
-                } else {
-                    dy = 0;
-                }
-                if (mapManager.freeToPutBomb(gridX + dx, gridY + dy)) {
-                    bomb = new Bomb(gridX + dx, gridY + dy, this);
-                } else if (mapManager.freeToPutBomb(gridX + 1 - dx, gridY + dy)) {
-                    bomb = new Bomb(gridX + 1 -dx, gridY + dy, this);
-                } else if (mapManager.freeToPutBomb(gridX + dx, gridY + 1 - dy)) {
-                    bomb = new Bomb(gridX + dx, gridY + 1 - dy, this);
-                } else {
-                    bomb = new Bomb(gridX + 1 - dx, gridY + 1 - dy, this);
-                }
-                mapManager.receiveBomb(bomb);
-            }
-            bombCounter++;
             System.out.println("Bomb counter: " + bombCounter);
         }
     }
@@ -236,16 +194,10 @@ public class Character extends MovingEntity {
         return isKilled;
     }
 
-    public int getHeight() {
-        return (int) this.entityGraphics.getHeight() - offsetY;
-    }
 
-    private void updateX(int dx) {
-        this.coordinate.updateX(dx);
-    }
-
-    private void updateY(int dy) {
-        this.coordinate.updateY(dy);
+    private void updateCoordinate(int dx, int dy) {
+        this.coordinate.updateCoordinate(dx, dy);
+        this.boundaryBox.updateBoundaryBox(dx, dy);
     }
 
     private void update_Dx_Dy(int speed) {

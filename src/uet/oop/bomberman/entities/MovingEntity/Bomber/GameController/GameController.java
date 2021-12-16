@@ -23,7 +23,7 @@ public class GameController {
     private final KeyCode downKey = KeyCode.DOWN;
     private final KeyCode leftKey = KeyCode.LEFT;
     private final KeyCode rightKey = KeyCode.RIGHT;
-    private final KeyCode fireKey = KeyCode.A;
+    private final KeyCode fireKey = KeyCode.SPACE;
 
 
     private final Scene scene;
@@ -46,16 +46,6 @@ public class GameController {
      * "Key Pressed" handler for all input events: register pressed key in the bitset
      */
     private final EventHandler<KeyEvent> keyPressedEventHandler = event -> {
-//        if (event.getCode().equals(fireKey)) {
-//            keyboardBitSet.set(fireKey.ordinal(), true);
-//        } else {
-////            keyboardBitSet.set(upKey.ordinal(), false);
-////            keyboardBitSet.set(downKey.ordinal(), false);
-////            keyboardBitSet.set(rightKey.ordinal(), false);
-////            keyboardBitSet.set(leftKey.ordinal(), false);
-//            // register key down
-//            keyboardBitSet.set(event.getCode().ordinal(), true);
-//        }
         keyboardBitSet.set(event.getCode().ordinal(), true);
 
     };

@@ -12,7 +12,7 @@ public class BombermanGame extends Application {
 	}
 
 	@Override
-	public void start(Stage mainStage) throws Exception {
+	public void start(Stage mainStage) {
 		try {
 			BaseWindow baseWindow = new BaseWindow();
 			mainStage = baseWindow.getMainStage();

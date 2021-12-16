@@ -48,28 +48,28 @@
 
 package uet.oop.bomberman.entities;
 
-import javafx.geometry.BoundingBox;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
-import java.util.ArrayList;
 
 
 public abstract class Entity {
 
 	protected Coordinate coordinate = new Coordinate();
 	protected Image entityGraphics;
+	protected BoundaryBox boundaryBox;
 
 
 	public Entity(int x, int y) {
 		this.coordinate.setX(x);
 		this.coordinate.setY(y);
+		this.boundaryBox = new BoundaryBox(coordinate, this.getImageWidth(), this.getImageHeight());
 	}
 
 	public Entity(int x, int y, Image image) {
 		this.coordinate.setX(x);
 		this.coordinate.setY(y);
 		this.entityGraphics = image;
+		this.boundaryBox = new BoundaryBox(coordinate, this.getImageWidth(), this.getImageHeight());
 	}
 
 	public void render(GraphicsContext gc) {
@@ -77,7 +77,8 @@ public abstract class Entity {
 			return;
 		}
 		gc.drawImage(this.entityGraphics, this.coordinate.getX(), this.coordinate.getY());
-		gc.strokeRect(this.coordinate.getX(), this.coordinate.getY(), this.getWidth(), this.getHeight());
+		gc.strokeRect(this.boundaryBox.getTop_left().getX(), this.boundaryBox.getTop_left().getY(),
+				this.boundaryBox.getBoundaryBoxWidth(), this.boundaryBox.getBoundaryBoxHeight());
 	};
 
 	public abstract void update();
@@ -90,21 +91,12 @@ public abstract class Entity {
 		return this.coordinate.getY();
 	}
 
-	public int getWidth() {
+	public int getImageWidth() {
 		return (entityGraphics == null)? 0 : (int) entityGraphics.getWidth();
 	}
 
-	public int getHeight() {
+	public int getImageHeight() {
 		return (entityGraphics == null)? 0 : (int) entityGraphics.getHeight();
-	}
-
-	public ArrayList<Coordinate> getBoundaryRectangle(){
-		ArrayList<Coordinate> points = new ArrayList<>();
-		Coordinate top_left = new Coordinate(this.getX(), this.getY());
-		Coordinate bottom_right = new Coordinate(this.getX() + this.getWidth(), this.getY() + this.getHeight());
-		points.add(top_left);
-		points.add(bottom_right);
-		return points;
 	}
 
 	public Coordinate getCoordinate() {

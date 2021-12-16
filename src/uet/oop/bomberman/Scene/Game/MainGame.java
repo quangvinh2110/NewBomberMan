@@ -92,6 +92,7 @@ public class MainGame {
 
     private void update() {
         bomber.update();
+        mapManager.updateDynamicEntityList();
         enemiesList.forEach(Enemy::update);
         mapManager.getDynamicEntityInMap().forEach(Entity::update);
         mapManager.getDynamicEntityInMap().forEach(Entity::update);

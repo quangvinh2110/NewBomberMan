@@ -38,4 +38,9 @@ public class Coordinate {
         this.y += dy;
     }
 
+    public void updateCoordinate(int dx, int dy) {
+        this.x += dx;
+        this.y += dy;
+    }
+
 }

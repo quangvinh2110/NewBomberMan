@@ -23,7 +23,8 @@ public class GameController {
     private final KeyCode downKey = KeyCode.DOWN;
     private final KeyCode leftKey = KeyCode.LEFT;
     private final KeyCode rightKey = KeyCode.RIGHT;
-    private final KeyCode fireKey = KeyCode.SPACE;
+    private final KeyCode fireKey = KeyCode.A;
+
 
     private final Scene scene;
 
@@ -90,7 +91,7 @@ public class GameController {
     }
 
     public boolean isFireKey() {
-        return keyboardBitSet.get(fireKey.ordinal());
+        return  keyboardBitSet.get(fireKey.ordinal());
     }
 
 

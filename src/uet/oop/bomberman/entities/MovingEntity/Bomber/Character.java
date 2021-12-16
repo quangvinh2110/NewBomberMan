@@ -167,6 +167,7 @@ public class Character extends MovingEntity {
 
     private void createBomb() {
         if (!isKilled && (bombCounter < maxBombCounter)) {
+            int id = this.bombCounter;
             int gridX = (int) (this.getX()*1.0/Map.TILE_SIZE);
             int gridY = (int) ((this.getY() + offsetY)*1.0/Map.TILE_SIZE);
 
@@ -230,9 +231,6 @@ public class Character extends MovingEntity {
         }
     }
 
-    public void removeBomb(Bomb bomb) {
-        this.mapManager.getBombs().remove(bomb);
-    }
 
     public boolean isKilled() {
         return isKilled;

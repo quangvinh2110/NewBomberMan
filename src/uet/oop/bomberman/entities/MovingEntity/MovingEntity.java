@@ -47,4 +47,8 @@ public abstract class MovingEntity extends Entity {
         return bottom_right1.getY() > top_left2.getY() && bottom_right2.getY() > top_left1.getY();
     };
 
+    public MapManager getMapManager() {
+        return this.mapManager;
+    }
+
 }

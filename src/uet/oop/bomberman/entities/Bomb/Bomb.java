@@ -9,12 +9,13 @@ import java.util.ArrayList;
 
 public class Bomb extends Entity {
 
-    private Character bombOwner;
+    private final Character bombOwner;
     private final PingPong_Animation entityAnimation;
     private static final double animateStep = 1.0/5;
-    private boolean exploded;
-    private int countToExplode = 500;
-    private boolean exploding;
+    private int countToExplode = 300;
+    private int explodingTime = 100;
+    public boolean exploding;
+    public boolean explosionEnded;
 
 
     public Bomb(int x, int y, Character bombOwner) {
@@ -26,14 +27,34 @@ public class Bomb extends Entity {
         sprites.add(GameSprite2.bomb_large);
         entityGraphics = GameSprite2.bomb_small.getImage();
         entityAnimation = new PingPong_Animation(sprites, animateStep);
+
+        exploding = false;
+        explosionEnded = false;
     }
 
     @Override
     public void update() {
         entityGraphics = entityAnimation.animate();
-        countToExplode--;
         if(countToExplode < 0) {
-            bombOwner.removeBomb(this);
+            exploding = true;
+            removeBomb();
+        }
+        if(exploding) {
+            explodingTime--;
+        } else {
+            countToExplode--;
+        }
+    }
+
+    private void removeBomb() {
+        for (Entity entity : this.bombOwner.getMapManager().getDynamicEntityInMap()) {
+            if (entity instanceof Bomb) {
+                Bomb bomb = (Bomb) entity;
+                if (bomb.exploding) {
+                    this.bombOwner.getMapManager().getDynamicEntityInMap().remove(bomb);
+                    return;
+                }
+            }
         }
     }
 }

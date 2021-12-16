@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import uet.oop.bomberman.Scene.Game.Map.MapManager;
 import uet.oop.bomberman.Setup.BaseWindow;
 import uet.oop.bomberman.entities.Bomb.Bomb;
+import uet.oop.bomberman.entities.FixedEntity.Fragile.TreeRoot;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Bomber;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Character;
 import uet.oop.bomberman.entities.MovingEntity.MovingEntity;
@@ -15,6 +16,7 @@ import uet.oop.bomberman.entities.MovingEntity.Enemy.Enemy;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.GameController.*;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 
 public class MainGame {
@@ -90,18 +92,10 @@ public class MainGame {
 
     private void update() {
         bomber.update();
-        if (enemiesList.size() > 0) {
-            enemiesList.forEach(Enemy::update);
-        }
-        if (mapManager.getFixedEntityInMap().size() > 0) {
-            mapManager.getFixedEntityInMap().forEach(Entity::update);
-        }
-        if (mapManager.getDynamicEntityInMap().size() > 0) {
-            mapManager.getDynamicEntityInMap().forEach(Entity::update);
-        }
-        if (mapManager.getBombs().size() > 0) {
-            mapManager.getBombs().forEach(Bomb::update);
-        }
+        enemiesList.forEach(Enemy::update);
+        mapManager.getDynamicEntityInMap().forEach(Entity::update);
+        mapManager.getDynamicEntityInMap().forEach(Entity::update);
+
     }
 
     private void render() {
@@ -111,9 +105,6 @@ public class MainGame {
         }
         if (mapManager.getDynamicEntityInMap().size() > 0) {
             mapManager.getDynamicEntityInMap().forEach(o -> o.render(graphicsContext));
-        }
-        if (mapManager.getBombs().size() > 0) {
-            mapManager.getBombs().forEach(o -> o.render(graphicsContext));
         }
         if (enemiesList.size() > 0) {
             enemiesList.forEach( o -> o.render(graphicsContext));

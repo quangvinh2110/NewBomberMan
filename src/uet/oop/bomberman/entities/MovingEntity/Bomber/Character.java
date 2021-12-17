@@ -1,9 +1,9 @@
 package uet.oop.bomberman.entities.MovingEntity.Bomber;
 
 import javafx.scene.canvas.GraphicsContext;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.GraphicsRenderer.Animation.PingPong_Animation;
 import uet.oop.bomberman.Scene.Game.Map.Map;
-import uet.oop.bomberman.Scene.Game.Map.MapManager;
 import uet.oop.bomberman.entities.Bomb.Bomb;
 import uet.oop.bomberman.entities.BoundaryBox;
 import uet.oop.bomberman.entities.Coordinate;
@@ -21,7 +21,6 @@ public class Character extends MovingEntity {
     private int createBombTimeElapsed = 0;
     private int bombCounter = 0;
     private int maxBombCounter = 1;
-    private int explosionRange = 1;
     private int bombPower = 1;
 
     public boolean isKilled = false;
@@ -35,8 +34,8 @@ public class Character extends MovingEntity {
 
 
 
-    public Character(GameController input, int x, int y, Bomber chosenBomber, MapManager mapManager) {
-        super(x, y, mapManager);
+    public Character(GameController input, int x, int y, Bomber chosenBomber) {
+        super(x, y);
 
         bomber = chosenBomber;
         this.input = input;
@@ -142,11 +141,11 @@ public class Character extends MovingEntity {
         int top_left_Y_4 = real_nextY/ Map.TILE_SIZE + 1;
 
         System.out.println("(" + top_left_X_1 + ", " + top_left_Y_1 + ")");
-        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_1, top_left_Y_1)) {
+        if (BombermanGame.baseWindow.mainGame.mapManager.haveFixedEntityAtGridLocation(top_left_X_1, top_left_Y_1)) {
             System.out.println("top left: " + false);
             return false;
         }
-        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_2, top_left_Y_2)) {
+        if (BombermanGame.baseWindow.mainGame.mapManager.haveFixedEntityAtGridLocation(top_left_X_2, top_left_Y_2)) {
             Coordinate top_left = new Coordinate(top_left_X_2*Map.TILE_SIZE, top_left_Y_2*Map.TILE_SIZE);
             boolean check = collide(newBoundaryBox, new BoundaryBox(top_left, Map.TILE_SIZE, Map.TILE_SIZE));
             System.out.println("top right: " + check);
@@ -154,7 +153,7 @@ public class Character extends MovingEntity {
                 return false;
             }
         }
-        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_3, top_left_Y_3)) {
+        if (BombermanGame.baseWindow.mainGame.mapManager.haveFixedEntityAtGridLocation(top_left_X_3, top_left_Y_3)) {
             Coordinate top_left = new Coordinate(top_left_X_3*Map.TILE_SIZE, top_left_Y_3*Map.TILE_SIZE);
             boolean check = collide(newBoundaryBox, new BoundaryBox(top_left, Map.TILE_SIZE, Map.TILE_SIZE));
             System.out.println("bottom left: " + check);
@@ -162,7 +161,7 @@ public class Character extends MovingEntity {
                 return false;
             }
         }
-        if (mapManager.haveFixedEntityAtGridLocation(top_left_X_4, top_left_Y_4)) {
+        if (BombermanGame.baseWindow.mainGame.mapManager.haveFixedEntityAtGridLocation(top_left_X_4, top_left_Y_4)) {
             Coordinate top_left = new Coordinate(top_left_X_4*Map.TILE_SIZE, top_left_Y_4*Map.TILE_SIZE);
             boolean check = collide(newBoundaryBox, new BoundaryBox(top_left, Map.TILE_SIZE, Map.TILE_SIZE));
             System.out.println("bottom right: " + check);
@@ -176,7 +175,7 @@ public class Character extends MovingEntity {
             int gridX = (int) (this.getX()*1.0/Map.TILE_SIZE);
             int gridY = (int) ((this.getY() + offsetY)*1.0/Map.TILE_SIZE);
             Bomb bomb = new Bomb(gridX*Map.TILE_SIZE, gridY*Map.TILE_SIZE, this, bombPower);
-            boolean receiveSuccess = mapManager.receiveBomb(bomb);
+            boolean receiveSuccess = BombermanGame.baseWindow.mainGame.mapManager.receiveBomb(bomb);
             System.out.println("Previous bomb counter: " + bombCounter);
             if (receiveSuccess) {
                 this.bombCounter++;

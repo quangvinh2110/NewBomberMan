@@ -16,7 +16,8 @@ public class BaseWindow {
 
     private String HowToPlayInfoFromFile;
     private String CreditInfoFromFile;
-
+    public MainMenu mainMenu;
+    public MainGame mainGame;
 
     private Stage mainStage;
 
@@ -26,8 +27,7 @@ public class BaseWindow {
 
 
     private void Initialize() {
-        MainMenu mainMenu = new MainMenu();
-
+        this.mainMenu = new MainMenu();
 
         Scene mainScene = mainMenu.getMenuScene();
 

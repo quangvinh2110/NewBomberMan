@@ -7,16 +7,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import uet.oop.bomberman.Scene.Game.Map.MapManager;
 import uet.oop.bomberman.Setup.BaseWindow;
-import uet.oop.bomberman.entities.Bomb.Bomb;
-import uet.oop.bomberman.entities.FixedEntity.Fragile.TreeRoot;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Bomber;
 import uet.oop.bomberman.entities.MovingEntity.Bomber.Character;
-import uet.oop.bomberman.entities.MovingEntity.MovingEntity;
+import uet.oop.bomberman.entities.MovingEntity.Bomber.GameController.GameController;
 import uet.oop.bomberman.entities.MovingEntity.Enemy.Enemy;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.MovingEntity.Bomber.GameController.*;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 
 public class MainGame {
@@ -34,7 +30,7 @@ public class MainGame {
     private ArrayList<Enemy> enemiesList;
 
 
-    private MapManager mapManager;
+    public MapManager mapManager;
 
 
     public MainGame(){
@@ -55,7 +51,6 @@ public class MainGame {
 
 
     public void createNewGame(Bomber chosenBomber) {
-//        createBaseMap();
         createBomber(chosenBomber);
         createEnemies();
         render();
@@ -65,7 +60,7 @@ public class MainGame {
     private void createBomber(Bomber chosenBomber) {
         GameController gameController = new GameController(gameScene);
         gameController.addListeners();
-        bomber = new Character(gameController, 80, 80, chosenBomber, mapManager);
+        bomber = new Character(gameController, 80, 80, chosenBomber);
     }
 
 

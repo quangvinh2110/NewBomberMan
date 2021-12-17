@@ -3,6 +3,7 @@ package uet.oop.bomberman.Scene.Menu.NewGame;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.GraphicsRenderer.Animation.TransitionAnimation;
 import uet.oop.bomberman.Scene.Game.MainGame;
 import uet.oop.bomberman.Scene.Menu.MenuController.MenuButton;
@@ -60,12 +61,11 @@ public class NewGameSubScene extends MenuSubScene {
 
         startButton.setOnAction(actionEvent -> {
             if (chosenBomber != null) {
-                MainGame mainGame = new MainGame();
-                mainGame.createNewGame(chosenBomber);
+                BombermanGame.baseWindow.mainGame = new MainGame();
+                BombermanGame.baseWindow.mainGame.createNewGame(chosenBomber);
                 Scene scene1 = ((MenuButton) actionEvent.getSource()).getScene();
                 Stage mainStage = (Stage) scene1.getWindow();
-                TransitionAnimation.run(mainStage, scene1, mainGame.getGameScene());
-
+                TransitionAnimation.run(mainStage, scene1, BombermanGame.baseWindow.mainGame.getGameScene());
             }
         });
 

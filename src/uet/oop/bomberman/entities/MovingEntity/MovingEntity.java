@@ -15,11 +15,10 @@ public abstract class MovingEntity extends Entity {
     protected Direction animateDirection = Direction.DOWN;
     protected Direction newAnimateDirection;
 
-    protected MapManager mapManager;
 
-    public MovingEntity(int x, int y, MapManager mapManager) {
+
+    public MovingEntity(int x, int y) {
         super(x, y);
-        this.mapManager = mapManager;
     }
 
     public abstract void update();

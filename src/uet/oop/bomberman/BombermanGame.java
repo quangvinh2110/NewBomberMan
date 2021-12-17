@@ -6,6 +6,7 @@ import uet.oop.bomberman.Setup.BaseWindow;
 
 public class BombermanGame extends Application {
 
+	public static BaseWindow baseWindow = new BaseWindow();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -14,8 +15,7 @@ public class BombermanGame extends Application {
 	@Override
 	public void start(Stage mainStage) {
 		try {
-			BaseWindow baseWindow = new BaseWindow();
-			mainStage = baseWindow.getMainStage();
+			mainStage = BombermanGame.baseWindow.getMainStage();
 			mainStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();

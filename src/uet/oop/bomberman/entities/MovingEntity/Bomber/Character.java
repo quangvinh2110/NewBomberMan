@@ -18,13 +18,14 @@ public class Character extends MovingEntity {
     private boolean[] pressedDirection;
 
     private final int createBombTime = 7;
-    private int createBombTimeElapsed;
-    private int bombCounter;
-    private int maxBombCounter = 4;
+    private int createBombTimeElapsed = 0;
+    private int bombCounter = 0;
+    private int maxBombCounter = 1;
     private int explosionRange = 1;
+    private int bombPower = 1;
 
-    private boolean isKilled;
-    private boolean death;
+    public boolean isKilled = false;
+    public boolean death = false;
 
     private static final int offsetY = 23;
 
@@ -42,12 +43,6 @@ public class Character extends MovingEntity {
 
         entityGraphics = bomber.getMovingSprites(animateDirection).get(1).getImage();
         entityMovingAnimation = new PingPong_Animation(bomber.getMovingSprites(animateDirection), animateStep);
-
-        createBombTimeElapsed = 0;
-        bombCounter = 0;
-
-        isKilled = false;
-        death = false;
 
         this.boundaryBox = new BoundaryBox(new Coordinate(this.getX(), this.getY() + offsetY), this.getImageWidth(),
                 this.getImageHeight() - offsetY);
@@ -180,20 +175,21 @@ public class Character extends MovingEntity {
         if (!isKilled && (bombCounter < maxBombCounter)) {
             int gridX = (int) (this.getX()*1.0/Map.TILE_SIZE);
             int gridY = (int) ((this.getY() + offsetY)*1.0/Map.TILE_SIZE);
-            Bomb bomb = new Bomb(gridX*Map.TILE_SIZE, gridY*Map.TILE_SIZE, this);
+            Bomb bomb = new Bomb(gridX*Map.TILE_SIZE, gridY*Map.TILE_SIZE, this, bombPower);
             boolean receiveSuccess = mapManager.receiveBomb(bomb);
+            System.out.println("Previous bomb counter: " + bombCounter);
             if (receiveSuccess) {
-                bombCounter++;
+                this.bombCounter++;
             }
-            System.out.println("Bomb counter: " + bombCounter);
+            System.out.println("Receive Bomb Success: " + receiveSuccess);
+            System.out.println("Update bomb counter: " + bombCounter);
         }
     }
 
-
-    public boolean isKilled() {
-        return isKilled;
+    public void decreaseBombCounter() {
+        this.bombCounter--;
+        System.out.println("Update bomb counter: " + this.bombCounter);
     }
-
 
     private void updateCoordinate(int dx, int dy) {
         this.coordinate.updateCoordinate(dx, dy);

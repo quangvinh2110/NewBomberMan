@@ -10,17 +10,21 @@ import java.util.ArrayList;
 public class Bomb extends Entity {
 
     private final Character bombOwner;
+    private final int power;
     private final PingPong_Animation entityAnimation;
     private static final double animateStep = 1.0/5;
-    private int countToExplode = 300;
-    private int explodingTime = 100;
+    public static final int timeToExplode = 300;
+    private int timeToExplodeElapsed = 0;
+
+
     public boolean exploding;
     public boolean explosionEnded;
 
 
-    public Bomb(int x, int y, Character bombOwner) {
+    public Bomb(int x, int y, Character bombOwner, int power) {
         super(x, y);
         this.bombOwner = bombOwner;
+        this.power = power;
         ArrayList<GameSprite2> sprites = new ArrayList<>();
         sprites.add(GameSprite2.bomb_small);
         sprites.add(GameSprite2.bomb_medium);
@@ -35,14 +39,18 @@ public class Bomb extends Entity {
     @Override
     public void update() {
         entityGraphics = entityAnimation.animate();
-        if(countToExplode < 0) {
+        if(timeToExplodeElapsed >= timeToExplode) {
             exploding = true;
+            bombOwner.decreaseBombCounter();
+            createExplosion();
         }
-        if(exploding) {
-            explodingTime--;
-        } else {
-            countToExplode--;
+        if(!exploding) {
+            timeToExplodeElapsed++;
         }
+    }
+
+    private void createExplosion(){
+        Explosion explosion = new Explosion(this.getX(), this.getY(), power);
     }
 
 }

@@ -202,6 +202,8 @@ public class MapManager {
                 if (bomb.exploding) {
                     this.dynamicEntityInMap.remove(bomb);
                     updateAfterRemoveAtGridLocation(bomb.getX()/Map.TILE_SIZE, bomb.getY()/Map.TILE_SIZE);
+                    bomb = null;
+                    System.gc();
                     break;
                 }
             }

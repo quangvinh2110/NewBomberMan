@@ -59,6 +59,7 @@ public abstract class Entity {
 	protected BoundaryBox boundaryBox;
 
 
+
 	public Entity(int x, int y) {
 		this.coordinate.setX(x);
 		this.coordinate.setY(y);
@@ -101,6 +102,11 @@ public abstract class Entity {
 
 	public Coordinate getCoordinate() {
 		return coordinate;
+	}
+
+	@Override
+	protected void finalize() {
+		System.out.println("Garbage collector in action! Deleted one object!");
 	}
 }
 

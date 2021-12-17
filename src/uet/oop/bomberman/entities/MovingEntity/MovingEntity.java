@@ -10,7 +10,7 @@ public abstract class MovingEntity extends Entity {
 
     protected int dx = 0;
     protected int dy = 0;
-    protected int speed = 2;
+    protected int speed = 3;
 
     protected Direction animateDirection = Direction.DOWN;
     protected Direction newAnimateDirection;
